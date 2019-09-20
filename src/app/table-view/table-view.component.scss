@@ -1,0 +1,32 @@
+table {
+  width: 100%;
+}
+
+table th {
+  padding: 10px;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+table th:after {
+  width: 20px;
+  display: inline-block;
+  font-size: 11px;
+}
+
+table th.sorted:after {
+  content: '\25BC';
+}
+
+table th.sorted.desc:after {
+  transform: rotate(180deg);
+}
+
+table tr:nth-of-type(odd) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+table td {
+  padding: 5px 10px;
+}

@@ -1,0 +1,13 @@
+<table *ngIf="dataSource">
+  <tr>
+    <th *ngFor="let column of dataColumns" (click)="sort(column)"
+        [ngClass]="{sorted: column == sorted, desc: column == sorted && !order}">
+      {{column}}
+    </th>
+  </tr>
+  <tr *ngFor="let item of dataSource">
+    <td *ngFor="let column of dataColumns">
+      {{item[column]}}
+    </td>
+  </tr>
+</table>

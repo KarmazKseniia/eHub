@@ -1,16 +1,21 @@
 <div class="itemsPerPage">
   <span>Show </span>
   <select [formControl]="itemsPerPageSelect" (change)="changeItemsPerPage($event)">
-    <option *ngFor="let opt of OPTIONS" [ngValue]="opt">{{opt}}</option>
+    <option *ngFor="let opt of pagination.OPTIONS" [ngValue]="opt">{{opt}}</option>
   </select>
   <span> entries per page</span>
 </div>
 
 
-<!--<div>
-  <span>Showing</span> 1 <span>to</span> 5 <span>of</span> 57 <span>entries</span>
+<div class="paginationControls">
+  <a *ngIf="pagination.currentPage == 1" class="disabled">Previous</a>
+  <a *ngIf="pagination.currentPage > 1" [routerLink]="['/page/', pagination.currentPage - 1]">Previous</a>
+  <a [routerLink]="['/page/', page]" routerLinkActive="active" *ngFor="let page of pagination.pages">{{page}}</a>
+  <a *ngIf="pagination.currentPage == pagination.pages.length" class="disabled">Next</a>
+  <a *ngIf="pagination.currentPage < pagination.pages.length" [routerLink]="['/page/', +pagination.currentPage + 1]">Next</a>
 </div>
 
-<div>
-  Pagination
-</div>-->
+<div class="paginationInfo">
+  <span>Showing</span> {{pagination.params.from}} <span>to</span> {{pagination.params.to}} <span>of</span>
+  {{itemsCount}} <span>entries</span>
+</div>

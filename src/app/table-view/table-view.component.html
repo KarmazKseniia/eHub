@@ -1,17 +1,15 @@
-<div *ngIf="dataSource">
+<div *ngIf="dataSource && dataSource.length">
 
-  <app-pagination
-    [itemsCount]="dataSource.length" [itemsPerPage]="itemsPerPage"
-    (itemsPerPageChanged)="itemsPerPageChanged($event)"></app-pagination>
+  <app-pagination [itemsCount]="dataSource.length"></app-pagination>
 
   <table>
     <tr>
       <th *ngFor="let column of dataColumns" (click)="sort(column)"
-          [ngClass]="{sorted: column == sorted, desc: column == sorted && !order}">
+          [ngClass]="{sorted: column == sorted, desc: column == sorted && order}">
         {{column}}
       </th>
     </tr>
-    <tr *ngFor="let item of dataSource | slice:0:itemsPerPage">
+    <tr *ngFor="let item of dataSource | slice:(pagination.params.from - 1):pagination.params.to">
       <td *ngFor="let column of dataColumns">
         {{item[column]}}
       </td>

@@ -1,3 +1,33 @@
-.itemsPerPage {
+.itemsPerPage,
+.paginationInfo,
+.paginationControls {
   margin: 10px 5px;
+  float: left;
+}
+
+.paginationInfo {
+  padding: 10px;
+}
+
+.paginationInfo,
+.paginationControls {
+  float: right;
+}
+
+.paginationControls a {
+  display: inline-block;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: black;
+  user-select: none;
+}
+
+.paginationControls a.active,
+.paginationControls a:not(.disabled):hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.paginationControls a.disabled {
+  color: rgba(0, 0, 0, 0.1);
 }

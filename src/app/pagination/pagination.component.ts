@@ -1,5 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl} from "@angular/forms";
+import {ActivatedRoute, Router} from "@angular/router";
+import {PaginationService} from "../services/pagination.service";
+import {takeUntil} from "rxjs/internal/operators";
+import {Subject} from "rxjs/index";
 
 @Component({
   selector: 'app-pagination',
@@ -8,19 +12,35 @@ import {FormControl} from "@angular/forms";
 })
 export class PaginationComponent implements OnInit {
   @Input() itemsCount: number;
-  @Input() itemsPerPage: number = 5;
-  @Output() itemsPerPageChanged = new EventEmitter<number>();
-  OPTIONS = [5, 10, 15, 20]; // TODO: make config file
-  itemsPerPageSelect: FormControl;
 
-  constructor() {
+  itemsPerPageSelect: FormControl;
+  pages: Array<number>;
+
+  private componentDestroyed: Subject<any> = new Subject();
+
+  constructor(public pagination: PaginationService,
+              private route: ActivatedRoute,
+              private router: Router) {
+
   }
 
   ngOnInit() {
-    this.itemsPerPageSelect = new FormControl(this.itemsPerPage);
+    this.itemsPerPageSelect = new FormControl(this.pagination.OPTIONS[0]);
+
+    this.route.paramMap.pipe(takeUntil(this.componentDestroyed)).subscribe(params => {
+      let p = +params.get("currentPage");
+
+      this.pagination.init(p > 0 ? p : 1, this.itemsPerPageSelect.value, this.itemsCount);
+    });
   }
 
   changeItemsPerPage(e) {
-    this.itemsPerPageChanged.emit(this.itemsPerPageSelect.value);
+    this.pagination.changeItemsPerPage(this.itemsPerPageSelect.value);
+    this.router.navigate(['/page/1']);
+  }
+
+  ngOnDestroy() {
+    this.componentDestroyed.next();
+    this.componentDestroyed.complete();
   }
 }

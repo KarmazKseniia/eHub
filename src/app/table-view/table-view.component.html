@@ -1,6 +1,6 @@
-<div *ngIf="searchDataSource && searchDataSource.length">
+<div class="search"><span>Search: </span><input [formControl]="searchPhrase"></div>
 
-  <div class="search"><span>Search: </span><input [formControl]="searchPhrase"></div>
+<div *ngIf="searchDataSource && searchDataSource.length">
 
   <app-pagination [itemsCount]="searchDataSource.length"></app-pagination>
 

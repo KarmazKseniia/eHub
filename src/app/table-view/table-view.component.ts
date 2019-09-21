@@ -54,5 +54,6 @@ export class TableViewComponent implements OnInit {
       return JSON.stringify(element) === JSON.stringify(item);
     });
     elem[column] = val;
+    this.searchPhrase.updateValueAndValidity();
   }
 }

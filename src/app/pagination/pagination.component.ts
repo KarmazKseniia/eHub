@@ -26,12 +26,10 @@ export class PaginationComponent implements OnInit {
 
   ngOnInit() {
     this.itemsPerPageSelect = new FormControl(this.pagination.OPTIONS[0]);
+    this.pagination.init(1, this.itemsPerPageSelect.value, this.itemsCount);
 
-    this.route.paramMap.pipe(takeUntil(this.componentDestroyed)).subscribe(params => {
-      let p = +params.get("currentPage");
-
-      this.pagination.init(p > 0 ? p : 1, this.itemsPerPageSelect.value, this.itemsCount);
-    });
+    this.route.paramMap.pipe(takeUntil(this.componentDestroyed)).subscribe(
+      params => this.pagination.changeCurrentPage(+params.get("currentPage")));
   }
 
   changeItemsPerPage(e) {

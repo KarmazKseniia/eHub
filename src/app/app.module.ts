@@ -6,19 +6,22 @@ import {AppComponent} from './app.component';
 import {TableViewComponent} from './table-view/table-view.component';
 import {HttpClientModule} from "@angular/common/http";
 import {PaginationComponent} from './pagination/pagination.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {SearchPipe} from './services/search.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     TableViewComponent,
-    PaginationComponent
+    PaginationComponent,
+    SearchPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

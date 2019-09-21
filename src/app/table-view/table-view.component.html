@@ -1,5 +1,7 @@
 <div *ngIf="dataSource && dataSource.length">
 
+  <div class="search"><span>Search: </span><input [formControl]="searchPhrase"></div>
+
   <app-pagination [itemsCount]="dataSource.length"></app-pagination>
 
   <table>
@@ -9,9 +11,10 @@
         {{column}}
       </th>
     </tr>
-    <tr *ngFor="let item of dataSource | slice:(pagination.params.from - 1):pagination.params.to">
+    <tr
+      *ngFor="let item of searchDataSource | slice:(pagination.params.from - 1):pagination.params.to">
       <td *ngFor="let column of dataColumns">
-        {{item[column]}}
+        <span [innerHTML]="item[column]"></span>
       </td>
     </tr>
   </table>

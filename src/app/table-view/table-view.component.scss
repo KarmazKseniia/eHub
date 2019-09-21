@@ -1,3 +1,11 @@
+.search {
+  margin: 10px 5px;
+}
+
+.search input {
+  padding: 5px;
+}
+
 table {
   width: 100%;
 }
@@ -10,9 +18,10 @@ table th {
 }
 
 table th:after {
+  content: '';
   width: 20px;
   display: inline-block;
-  font-size: 11px;
+  font-size: 10px;
 }
 
 table th.sorted:after {

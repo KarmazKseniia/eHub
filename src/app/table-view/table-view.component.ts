@@ -9,10 +9,11 @@ import {JsonDataService} from "../services/json-data.service";
 export class TableViewComponent implements OnInit {
   dataColumns: Array<string>;
   dataSource: Array<any>;
+
   order: boolean;
   sorted: string;
 
-  // @ViewChild(MatSort, {static: true}) sort: MatSort;
+  itemsPerPage: number = 5;
 
   constructor(private dataService: JsonDataService) {
   }
@@ -31,4 +32,7 @@ export class TableViewComponent implements OnInit {
     console.log(this.dataSource)
   }
 
+  itemsPerPageChanged(itemsCount) {
+    this.itemsPerPage = itemsCount;
+  }
 }

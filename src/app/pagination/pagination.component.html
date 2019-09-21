@@ -1,0 +1,16 @@
+<div class="itemsPerPage">
+  <span>Show </span>
+  <select [formControl]="itemsPerPageSelect" (change)="changeItemsPerPage($event)">
+    <option *ngFor="let opt of OPTIONS" [ngValue]="opt">{{opt}}</option>
+  </select>
+  <span> entries per page</span>
+</div>
+
+
+<!--<div>
+  <span>Showing</span> 1 <span>to</span> 5 <span>of</span> 57 <span>entries</span>
+</div>
+
+<div>
+  Pagination
+</div>-->

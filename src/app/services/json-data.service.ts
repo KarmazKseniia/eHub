@@ -9,8 +9,8 @@ export class JsonDataService {
   constructor(private http: HttpClient) {
   }
 
-  getDataSource(): Observable<any> {
-    return this.http.get("../../assets/data.json");
+  getDataSource(link?: string): Observable<any> {
+    return this.http.get(link || "../../assets/data.json");
   }
 
   getColumns(dataSource: Array<any>): Array<string> {

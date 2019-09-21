@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {JsonDataService} from "../services/json-data.service";
 import {PaginationService} from "../services/pagination.service";
-import {FormControl} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
 import {SearchPipe} from "../services/search.pipe";
 import {Router} from "@angular/router";
+import {Subject} from "rxjs/index";
+import {takeUntil} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-table-view',
@@ -20,6 +22,9 @@ export class TableViewComponent implements OnInit {
   order: boolean;
   sorted: string;
   searchPhrase: FormControl;
+  jsonLinkGroup: FormGroup;
+
+  private componentDestroyed: Subject<any> = new Subject();
 
   constructor(private dataService: JsonDataService,
               private searchPipe: SearchPipe,
@@ -28,13 +33,13 @@ export class TableViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.searchPhrase = new FormControl("");
-    this.searchPhrase.valueChanges.subscribe(term => this.search(term));
-    this.dataService.getDataSource().subscribe(data => {
-      this.dataSource = data;
-      this.searchDataSource = data;
-      this.dataColumns = this.dataService.getColumns(data);
+    this.jsonLinkGroup = new FormGroup({
+      link: new FormControl("https://jsonplaceholder.typicode.com/photos")
     });
+
+    this.searchPhrase = new FormControl("");
+    this.searchPhrase.valueChanges.pipe(takeUntil(this.componentDestroyed)).subscribe(term => this.search(term));
+    this.load(true);
   }
 
   sort(column: string) {
@@ -46,7 +51,7 @@ export class TableViewComponent implements OnInit {
   search(term: string) {
     this.searchDataSource = this.searchPipe.transform(this.dataSource, term);
     this.pagination.changeItemsCount(this.searchDataSource.length);
-    this.router.navigate(['/page/1']);
+    this.navigateToFirstPage();
   }
 
   saveValue(val: string, item: Object, column: string) {
@@ -55,5 +60,27 @@ export class TableViewComponent implements OnInit {
     });
     elem[column] = val;
     this.searchPhrase.updateValueAndValidity();
+  }
+
+  load(isDefault) {
+    this.dataService.getDataSource(isDefault ? '' : this.jsonLinkGroup.value.link)
+      .subscribe(data => this.fetchJsonData(data));
+  }
+
+  fetchJsonData(data) {
+    this.dataSource = data;
+    this.searchDataSource = data;
+    this.dataColumns = this.dataService.getColumns(data);
+    this.pagination.init(1, this.pagination.itemsPerPage, this.searchDataSource.length);
+    this.navigateToFirstPage();
+  }
+
+  navigateToFirstPage() {
+    this.router.navigate(['/page/1']);
+  }
+
+  ngOnDestroy() {
+    this.componentDestroyed.next();
+    this.componentDestroyed.complete();
   }
 }

@@ -1,4 +1,12 @@
-<div class="search"><span>Search: </span><input [formControl]="searchPhrase"></div>
+<div class="jsonLink">
+  <form [formGroup]="jsonLinkGroup" (submit)="load()">
+    <span>Insert link to JSON: </span>
+    <input placeholder="http://www.test.com/test.json" formControlName="link">
+    <button type="submit">Get data</button>
+  </form>
+</div>
+
+<div class="search"><span>Search: </span><input [formControl]="searchPhrase" placeholder="type search term here"></div>
 
 <div *ngIf="searchDataSource && searchDataSource.length">
 

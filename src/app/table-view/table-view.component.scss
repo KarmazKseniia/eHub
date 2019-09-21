@@ -1,8 +1,11 @@
-.search {
+.search,
+.jsonLink {
   margin: 10px 5px;
 }
 
-.search input {
+.search input,
+.jsonLink input,
+.jsonLink button {
   padding: 5px;
 }
 

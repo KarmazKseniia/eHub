@@ -49,4 +49,10 @@ export class TableViewComponent implements OnInit {
     this.router.navigate(['/page/1']);
   }
 
+  saveValue(val: string, item: Object, column: string) {
+    let elem = this.dataSource.find(function (element) {
+      return JSON.stringify(element) === JSON.stringify(item);
+    });
+    elem[column] = val;
+  }
 }

@@ -1,8 +1,8 @@
-<div *ngIf="dataSource && dataSource.length">
+<div *ngIf="searchDataSource && searchDataSource.length">
 
   <div class="search"><span>Search: </span><input [formControl]="searchPhrase"></div>
 
-  <app-pagination [itemsCount]="dataSource.length"></app-pagination>
+  <app-pagination [itemsCount]="searchDataSource.length"></app-pagination>
 
   <table>
     <tr>
@@ -14,7 +14,9 @@
     <tr
       *ngFor="let item of searchDataSource | slice:(pagination.params.from - 1):pagination.params.to">
       <td *ngFor="let column of dataColumns">
-        <span [innerHTML]="item[column]"></span>
+        <span class="editable" contenteditable="true"
+              (blur)="saveValue($event.target.textContent, item, column)"
+              [innerHTML]="item[column]"></span>
       </td>
     </tr>
   </table>

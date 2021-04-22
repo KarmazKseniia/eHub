@@ -1,37 +1,39 @@
-.itemsPerPage,
-.paginationInfo,
-.paginationControls {
-  margin: 10px 5px;
-  float: left;
+.pager {
+  display: flex;
+  align-items: center;
+
+  .items-per-page,
+  .pagination-controls {
+    margin: 10px 5px;
+  }
+
+  .pagination-info {
+    margin: 0 5px 0 auto;
+  }
 }
 
-.paginationInfo {
-  padding: 10px;
+.pagination-controls {
+  .dots {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .page {
+    cursor: pointer;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    color: black;
+
+    &:not(.disabled):hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    &.disabled {
+      color: rgba(0, 0, 0, 0.1);
+    }
+  }
 }
 
-.paginationInfo,
-.paginationControls {
-  float: right;
-}
-
-.paginationControls a {
-  display: inline-block;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.05);
-  text-decoration: none;
-  color: black;
-  user-select: none;
-}
-
-.paginationControls a.active,
-.paginationControls a:not(.disabled):hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-.paginationControls a.disabled {
-  color: rgba(0, 0, 0, 0.1);
-}
-
-.itemsPerPage select {
-  padding: 5px;
+.mr-5 {
+  margin-right: 5px;
 }

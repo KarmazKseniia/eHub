@@ -1,56 +1,64 @@
-import {Component, OnInit} from '@angular/core';
-import {JsonDataService} from "../services/json-data.service";
-import {PaginationService} from "../services/pagination.service";
-import {FormControl, FormGroup} from "@angular/forms";
-import {SearchPipe} from "../services/search.pipe";
-import {Router} from "@angular/router";
-import {Subject} from "rxjs/index";
-import {takeUntil} from "rxjs/internal/operators";
+import { Component, OnInit } from "@angular/core";
+import { JsonDataService } from "../services/json-data.service";
+import { FormControl, FormGroup } from "@angular/forms";
+import { SearchPipe } from "../pipes/search.pipe";
+import { Router } from "@angular/router";
+import { BehaviorSubject, Subject } from "rxjs/index";
+import { takeUntil } from "rxjs/internal/operators";
 
 @Component({
-  selector: 'app-table-view',
-  templateUrl: './table-view.component.html',
-  styleUrls: ['./table-view.component.scss'],
-  providers: [SearchPipe]
+  selector: "app-table-view",
+  templateUrl: "./table-view.component.html",
+  styleUrls: ["./table-view.component.scss"],
+  providers: [SearchPipe],
 })
 export class TableViewComponent implements OnInit {
-
+  loading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   dataColumns: Array<string>;
   dataSource: Array<any>;
   searchDataSource: Array<any>;
 
   order: boolean;
   sorted: string;
-  searchPhrase: FormControl;
+  searchPhrase: FormControl = new FormControl("");
   jsonLinkGroup: FormGroup;
 
-  private componentDestroyed: Subject<any> = new Subject();
+  itemsToShow = {
+    from: 0,
+    to: 0,
+  };
 
-  constructor(private dataService: JsonDataService,
-              private searchPipe: SearchPipe,
-              private router: Router,
-              public pagination: PaginationService) {
-  }
+  private destroyed$: Subject<any> = new Subject();
+
+  constructor(
+    private dataService: JsonDataService,
+    private searchPipe: SearchPipe,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.jsonLinkGroup = new FormGroup({
-      link: new FormControl("https://jsonplaceholder.typicode.com/photos")
+      link: new FormControl("https://jsonplaceholder.typicode.com/photos"),
     });
 
-    this.searchPhrase = new FormControl("");
-    this.searchPhrase.valueChanges.pipe(takeUntil(this.componentDestroyed)).subscribe(term => this.search(term));
+    this.searchPhrase.valueChanges
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((term) => this.search(term));
     this.load(true);
   }
 
   sort(column: string) {
     this.order = !this.order;
     this.sorted = column;
-    this.searchDataSource = this.dataService.sort(this.searchDataSource, column, this.order);
+    this.searchDataSource = this.dataService.sort(
+      this.searchDataSource,
+      column,
+      this.order
+    );
   }
 
   search(term: string) {
     this.searchDataSource = this.searchPipe.transform(this.dataSource, term);
-    this.pagination.changeItemsCount(this.searchDataSource.length);
     this.navigateToFirstPage();
   }
 
@@ -63,24 +71,33 @@ export class TableViewComponent implements OnInit {
   }
 
   load(isDefault) {
-    this.dataService.getDataSource(isDefault ? '' : this.jsonLinkGroup.value.link)
-      .subscribe(data => this.fetchJsonData(data));
+    this.loading$.next(true);
+    this.dataService
+      .getDataSource(isDefault ? undefined : this.jsonLinkGroup.value.link)
+      .subscribe(
+        (data) => this.fetchJsonData(data),
+        (err) => console.error(err),
+        () => this.loading$.next(false)
+      );
   }
 
   fetchJsonData(data) {
     this.dataSource = data;
     this.searchDataSource = data;
     this.dataColumns = this.dataService.getColumns(data);
-    this.pagination.init(1, this.pagination.itemsPerPage, this.searchDataSource.length);
     this.navigateToFirstPage();
   }
 
   navigateToFirstPage() {
-    this.router.navigate(['/page/1']);
+    this.router.navigate(["/page/1"]);
+  }
+
+  changeItemsToShow(itemsToShow) {
+    this.itemsToShow = itemsToShow;
   }
 
   ngOnDestroy() {
-    this.componentDestroyed.next();
-    this.componentDestroyed.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

@@ -1,30 +1,29 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
 
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {TableViewComponent} from './table-view/table-view.component';
-import {HttpClientModule} from "@angular/common/http";
-import {PaginationComponent} from './pagination/pagination.component';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {SearchPipe} from './services/search.pipe';
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { TableViewComponent } from "./table-view/table-view.component";
+import { HttpClientModule } from "@angular/common/http";
+import { PaginationComponent } from "./pagination/pagination.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { SearchPipe } from "./pipes/search.pipe";
 
 @NgModule({
   declarations: [
     AppComponent,
     TableViewComponent,
     PaginationComponent,
-    SearchPipe
+    SearchPipe,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}

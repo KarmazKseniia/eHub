@@ -1,23 +1,63 @@
-<div *ngIf="pagination.params.pagesCount">
-  <div class="itemsPerPage">
-    <span>Show </span>
-    <select [formControl]="itemsPerPageSelect" (change)="changeItemsPerPage($event)">
-      <option *ngFor="let opt of pagination.OPTIONS" [ngValue]="opt">{{opt}}</option>
+<div *ngIf="itemsCount && !loading" class="pager">
+  <div class="items-per-page">
+    <span class="mr-5">Show</span>
+    <select
+      class="mr-5"
+      [formControl]="itemsPerPageModel"
+      (change)="changeItemsPerPage($event)"
+    >
+      <option *ngFor="let option of itemsPerPageOptions" [ngValue]="option">
+        <span>{{ option }}</span>
+      </option>
     </select>
-    <span> entries per page</span>
+    <span>entries per page</span>
   </div>
 
-
-  <div class="paginationControls">
-    <a *ngIf="pagination.currentPage == 1" class="disabled">Previous</a>
-    <a *ngIf="pagination.currentPage > 1" [routerLink]="['/page/', pagination.currentPage - 1]">Previous</a>
-    <a [routerLink]="['/page/', page]" routerLinkActive="active" *ngFor="let page of pagination.pages">{{page}}</a>
-    <a *ngIf="pagination.currentPage == pagination.pages.length" class="disabled">Next</a>
-    <a *ngIf="pagination.currentPage < pagination.pages.length" [routerLink]="['/page/', +pagination.currentPage + 1]">Next</a>
+  <div class="pagination-info">
+    <span>Showing</span> {{ itemsToShow.from }} <span>to</span>
+    {{ itemsToShow.to }} <span>of</span>
+    {{ itemsCount }}
+    <span>entries</span>
   </div>
 
-  <div class="paginationInfo">
-    <span>Showing</span> {{pagination.params.from}} <span>to</span> {{pagination.params.to}} <span>of</span>
-    {{pagination.itemsCount}} <span>entries</span>
+  <div class="pagination-controls" *ngIf="totalPagesCount > 1">
+    <span
+      class="page"
+      (click)="changePage(current - 1)"
+      *ngIf="totalPagesCount > 5"
+      [class.disabled]="current === 1"
+    >
+      Previous
+    </span>
+
+    <span class="page" [class.active]="current === 1" (click)="changePage(1)">
+      1
+    </span>
+    <span *ngIf="showLeftDots()" class="dots">...</span>
+    <span
+      class="page"
+      [class.active]="current === page"
+      (click)="changePage(page)"
+      *ngFor="let page of middleCounter"
+    >
+      {{ page }}
+    </span>
+    <span *ngIf="showRightDots()" class="dots">...</span>
+    <span
+      class="page"
+      [class.active]="current === totalPagesCount"
+      (click)="changePage(totalPagesCount)"
+      *ngIf="totalPagesCount > 1"
+    >
+      {{ totalPagesCount }}
+    </span>
+    <span
+      class="page"
+      (click)="changePage(current + 1)"
+      *ngIf="totalPagesCount > 5"
+      [class.disabled]="current === totalPagesCount"
+    >
+      Next
+    </span>
   </div>
 </div>

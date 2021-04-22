@@ -1,30 +1,49 @@
 <div class="jsonLink">
   <form [formGroup]="jsonLinkGroup" (submit)="load()">
     <span>Insert link to JSON: </span>
-    <input placeholder="http://www.test.com/test.json" formControlName="link">
+    <input placeholder="http://www.test.com/test.json" formControlName="link" />
     <button type="submit">Get data</button>
   </form>
 </div>
 
-<div class="search"><span>Search: </span><input [formControl]="searchPhrase" placeholder="type search term here"></div>
+<div class="search">
+  <span>Search: </span
+  ><input [formControl]="searchPhrase" placeholder="type search term here" />
+</div>
 
 <div *ngIf="searchDataSource && searchDataSource.length">
-
-  <app-pagination [itemsCount]="searchDataSource.length"></app-pagination>
+  <app-pagination
+    [itemsCount]="searchDataSource.length"
+    [loading]="loading$ | async"
+    (change)="changeItemsToShow($event)"
+  ></app-pagination>
 
   <table>
     <tr>
-      <th *ngFor="let column of dataColumns" (click)="sort(column)"
-          [ngClass]="{sorted: column == sorted, desc: column == sorted && order}">
-        {{column}}
+      <th
+        *ngFor="let column of dataColumns"
+        (click)="sort(column)"
+        [ngClass]="{
+          sorted: column == sorted,
+          desc: column == sorted && order
+        }"
+      >
+        {{ column }}
       </th>
     </tr>
     <tr
-      *ngFor="let item of searchDataSource | slice:(pagination.params.from - 1):pagination.params.to">
+      *ngFor="
+        let item of searchDataSource
+          | slice: itemsToShow.from - 1:itemsToShow.to
+      "
+    >
       <td *ngFor="let column of dataColumns">
-        <span class="editable" contenteditable="true"
-              (blur)="saveValue($event.target.textContent, item, column)"
-              [innerHTML]="item[column]"></span>
+        <span
+          class="editable"
+          contenteditable="true"
+          (blur)="saveValue($event.target.textContent, item, column)"
+          [innerHTML]="item[column]"
+        ></span>
       </td>
     </tr>
   </table>
